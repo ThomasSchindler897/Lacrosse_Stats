@@ -1,0 +1,59 @@
+---
+title: "PLL_Stats_2019-2025"
+author: "Thomas Schindler"
+date: "2025-12-15"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Importing csv files from the Premier Lacrosse League's website https://stats.premierlacrosseleague.com/player-table
+
+```{r}
+Stats_2019 <- read.csv("pll-player-stats-2019.csv")
+Stats_2020 <- read.csv("pll-player-stats-2020.csv")
+Stats_2021 <- read.csv("pll-player-stats-2021.csv")
+Stats_2022 <- read.csv("pll-player-stats-2022.csv")
+Stats_2023 <- read.csv("pll-player-stats-2023.csv")
+Stats_2024 <- read.csv("pll-player-stats-2024.csv")
+Stats_2025 <- read.csv("pll-player-stats-2025.csv")
+head(Stats_2019)
+```
+#Creating a unique ID for each player using first name, last name, jersey number, and team
+
+```{r}
+Stats_2019$UniqueID <- paste(Stats_2019$First.Name, Stats_2019$Last.Name, Stats_2019$Jersey, Stats_2019$Team, sep = '_')
+head(Stats_2019)
+```
+
+#Finding out the Top 10 leading scorers in the PLL in Points, Assists, Scoring Points, Caused Turnovers, and Ground Balls in each year
+```{r}
+# First getting the top 10 players by overall points, scoring points, and assists
+
+point_stats_2019 <- Stats_2019[ , c('First.Name', 'Last.Name', 'points', 'scoringPoints', 'assists', 'causedTurnovers', 'groundBalls', 'UniqueID')]
+point_stats_2019
+top_ten_points_2019 <- head(point_stats_2019[order(point_stats_2019$points, decreasing = TRUE), ], 10)
+top_ten_scoringPoints_2019 <- head(point_stats_2019[order(point_stats_2019$scoringPoints, decreasing = TRUE), ], 10)
+top_ten_assists_2019 <- head(point_stats_2019[order(point_stats_2019$assists, decreasing = TRUE), ], 10)
+top_ten_ct_2019 <- head(point_stats_2019[order(point_stats_2019$causedTurnovers, decreasing = TRUE), ], 10)
+top_ten_gb_2019 <- head(point_stats_2019[order(point_stats_2019$groundBalls, decreasing = TRUE), ], 10)
+top_ten_points_2019
+top_ten_scoringPoints_2019
+top_ten_assists_2019
+top_ten_ct_2019
+top_ten_gb_2019
+
+# Combining the dataframes into one dataframe which is sorted by total points
+combined <- rbind(top_ten_points_2019,
+                  top_ten_scoringPoints_2019,
+                  top_ten_assists_2019,
+                  top_ten_ct_2019,
+                  top_ten_gb_2019)
+combined
+top_ten_performers_2019 <- combined[order(-combined$points), ]
+top_ten_performers_2019 <- combined[!duplicated(top_ten_performers_2019$UniqueID), ]
+top_ten_performers_2019
+```
+

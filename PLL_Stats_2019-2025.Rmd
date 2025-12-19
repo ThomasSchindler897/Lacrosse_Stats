@@ -10,7 +10,6 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 # Importing csv files from the Premier Lacrosse League's website https://stats.premierlacrosseleague.com/player-table
-
 ```{r}
 Stats_2019 <- read.csv("pll-player-stats-2019.csv")
 Stats_2020 <- read.csv("pll-player-stats-2020.csv")
@@ -19,41 +18,221 @@ Stats_2022 <- read.csv("pll-player-stats-2022.csv")
 Stats_2023 <- read.csv("pll-player-stats-2023.csv")
 Stats_2024 <- read.csv("pll-player-stats-2024.csv")
 Stats_2025 <- read.csv("pll-player-stats-2025.csv")
-head(Stats_2019)
 ```
-#Creating a unique ID for each player using first name, last name, jersey number, and team
 
+#Creating a unique ID for each player using first name, last name, jersey number, and team, and a year column
 ```{r}
-Stats_2019$UniqueID <- paste(Stats_2019$First.Name, Stats_2019$Last.Name, Stats_2019$Jersey, Stats_2019$Team, sep = '_')
-head(Stats_2019)
+Stats_2019$UniqueID <- paste(Stats_2019$First.Name, Stats_2019$Last.Name, Stats_2019$Position, sep = '_')
+Stats_2020$UniqueID <- paste(Stats_2020$First.Name, Stats_2020$Last.Name, Stats_2020$Position, sep = '_')
+Stats_2021$UniqueID <- paste(Stats_2021$First.Name, Stats_2021$Last.Name, Stats_2021$Position, sep = '_')
+Stats_2022$UniqueID <- paste(Stats_2022$First.Name, Stats_2022$Last.Name, Stats_2022$Position, sep = '_')
+Stats_2023$UniqueID <- paste(Stats_2023$First.Name, Stats_2023$Last.Name, Stats_2023$Position, sep = '_')
+Stats_2024$UniqueID <- paste(Stats_2024$First.Name, Stats_2024$Last.Name, Stats_2024$Position, sep = '_')
+Stats_2025$UniqueID <- paste(Stats_2025$First.Name, Stats_2025$Last.Name, Stats_2025$Position, sep = '_')
+Stats_2019$Year <- 2019
+Stats_2020$Year <- 2020
+Stats_2021$Year <- 2021
+Stats_2022$Year <- 2022
+Stats_2023$Year <- 2023
+Stats_2024$Year <- 2024
+Stats_2025$Year <- 2025
+
 ```
 
 #Finding out the Top 10 leading scorers in the PLL in Points, Assists, Scoring Points, Caused Turnovers, and Ground Balls in each year
 ```{r}
-# First getting the top 10 players by overall points, scoring points, and assists
+# First getting the top 10 players by overall points, scoring points, assists, caused turnovers, and ground balls
 
-point_stats_2019 <- Stats_2019[ , c('First.Name', 'Last.Name', 'points', 'scoringPoints', 'assists', 'causedTurnovers', 'groundBalls', 'UniqueID')]
-point_stats_2019
+point_stats_2019 <- Stats_2019[ , c('First.Name', 'Last.Name', 'points', 'scoringPoints', 'assists', 'causedTurnovers', 'groundBalls', 'UniqueID', 'Year')]
 top_ten_points_2019 <- head(point_stats_2019[order(point_stats_2019$points, decreasing = TRUE), ], 10)
 top_ten_scoringPoints_2019 <- head(point_stats_2019[order(point_stats_2019$scoringPoints, decreasing = TRUE), ], 10)
 top_ten_assists_2019 <- head(point_stats_2019[order(point_stats_2019$assists, decreasing = TRUE), ], 10)
 top_ten_ct_2019 <- head(point_stats_2019[order(point_stats_2019$causedTurnovers, decreasing = TRUE), ], 10)
 top_ten_gb_2019 <- head(point_stats_2019[order(point_stats_2019$groundBalls, decreasing = TRUE), ], 10)
-top_ten_points_2019
-top_ten_scoringPoints_2019
-top_ten_assists_2019
-top_ten_ct_2019
-top_ten_gb_2019
 
 # Combining the dataframes into one dataframe which is sorted by total points
-combined <- rbind(top_ten_points_2019,
+combined19 <- rbind(top_ten_points_2019,
                   top_ten_scoringPoints_2019,
                   top_ten_assists_2019,
                   top_ten_ct_2019,
                   top_ten_gb_2019)
-combined
-top_ten_performers_2019 <- combined[order(-combined$points), ]
-top_ten_performers_2019 <- combined[!duplicated(top_ten_performers_2019$UniqueID), ]
-top_ten_performers_2019
+
+top_ten_performers_2019 <- combined19[order(-combined19$points), ]
+top_ten_performers_2019 <- combined19[!duplicated(combined19$UniqueID), ]
+```
+
+# Repeat these same steps for 2020-2025
+```{r}
+#2020
+point_stats_2020 <- Stats_2020[ , c('First.Name', 'Last.Name', 'points', 'scoringPoints', 'assists', 'causedTurnovers', 'groundBalls', 'UniqueID', 'Year')]
+top_ten_points_2020 <- head(point_stats_2020[order(point_stats_2020$points, decreasing = TRUE), ], 10)
+top_ten_scoringPoints_2020 <- head(point_stats_2020[order(point_stats_2020$scoringPoints, decreasing = TRUE), ], 10)
+top_ten_assists_2020 <- head(point_stats_2020[order(point_stats_2020$assists, decreasing = TRUE), ], 10)
+top_ten_ct_2020 <- head(point_stats_2020[order(point_stats_2020$causedTurnovers, decreasing = TRUE), ], 10)
+top_ten_gb_2020 <- head(point_stats_2020[order(point_stats_2020$groundBalls, decreasing = TRUE), ], 10)
+
+combined20 <- rbind(top_ten_points_2020,
+                  top_ten_scoringPoints_2020,
+                  top_ten_assists_2020,
+                  top_ten_ct_2020,
+                  top_ten_gb_2020)
+top_ten_performers_2020 <- combined20[order(-combined20$points), ]
+top_ten_performers_2020 <- combined20[!duplicated(combined20$UniqueID), ]
+
+# 2021
+point_stats_2021 <- Stats_2021[ , c('First.Name', 'Last.Name', 'points', 'scoringPoints', 
+                                   'assists', 'causedTurnovers', 'groundBalls', 'UniqueID', 'Year')]
+
+top_ten_points_2021 <- head(point_stats_2021[order(point_stats_2021$points, decreasing = TRUE), ], 10)
+top_ten_scoringPoints_2021 <- head(point_stats_2021[order(point_stats_2021$scoringPoints, decreasing = TRUE), ], 10)
+top_ten_assists_2021 <- head(point_stats_2021[order(point_stats_2021$assists, decreasing = TRUE), ], 10)
+top_ten_ct_2021 <- head(point_stats_2021[order(point_stats_2021$causedTurnovers, decreasing = TRUE), ], 10)
+top_ten_gb_2021 <- head(point_stats_2021[order(point_stats_2021$groundBalls, decreasing = TRUE), ], 10)
+
+combined21 <- rbind(
+  top_ten_points_2021,
+  top_ten_scoringPoints_2021,
+  top_ten_assists_2021,
+  top_ten_ct_2021,
+  top_ten_gb_2021
+)
+
+top_ten_performers_2021 <- combined21[order(-combined21$points), ]
+top_ten_performers_2021 <- combined21[!duplicated(combined21$UniqueID), ]
+
+# 2022
+point_stats_2022 <- Stats_2022[ , c('First.Name', 'Last.Name', 'points', 'scoringPoints', 
+                                   'assists', 'causedTurnovers', 'groundBalls', 'UniqueID', 'Year')]
+
+top_ten_points_2022 <- head(point_stats_2022[order(point_stats_2022$points, decreasing = TRUE), ], 10)
+top_ten_scoringPoints_2022 <- head(point_stats_2022[order(point_stats_2022$scoringPoints, decreasing = TRUE), ], 10)
+top_ten_assists_2022 <- head(point_stats_2022[order(point_stats_2022$assists, decreasing = TRUE), ], 10)
+top_ten_ct_2022 <- head(point_stats_2022[order(point_stats_2022$causedTurnovers, decreasing = TRUE), ], 10)
+top_ten_gb_2022 <- head(point_stats_2022[order(point_stats_2022$groundBalls, decreasing = TRUE), ], 10)
+
+combined22 <- rbind(
+  top_ten_points_2022,
+  top_ten_scoringPoints_2022,
+  top_ten_assists_2022,
+  top_ten_ct_2022,
+  top_ten_gb_2022
+)
+
+top_ten_performers_2022 <- combined22[order(-combined22$points), ]
+top_ten_performers_2022 <- combined22[!duplicated(combined22$UniqueID), ]
+
+# 2023
+point_stats_2023 <- Stats_2023[ , c('First.Name', 'Last.Name', 'points', 'scoringPoints', 
+                                   'assists', 'causedTurnovers', 'groundBalls', 'UniqueID', 'Year')]
+
+top_ten_points_2023 <- head(point_stats_2023[order(point_stats_2023$points, decreasing = TRUE), ], 10)
+top_ten_scoringPoints_2023 <- head(point_stats_2023[order(point_stats_2023$scoringPoints, decreasing = TRUE), ], 10)
+top_ten_assists_2023 <- head(point_stats_2023[order(point_stats_2023$assists, decreasing = TRUE), ], 10)
+top_ten_ct_2023 <- head(point_stats_2023[order(point_stats_2023$causedTurnovers, decreasing = TRUE), ], 10)
+top_ten_gb_2023 <- head(point_stats_2023[order(point_stats_2023$groundBalls, decreasing = TRUE), ], 10)
+
+combined23 <- rbind(
+  top_ten_points_2023,
+  top_ten_scoringPoints_2023,
+  top_ten_assists_2023,
+  top_ten_ct_2023,
+  top_ten_gb_2023
+)
+
+top_ten_performers_2023 <- combined23[order(-combined23$points), ]
+top_ten_performers_2023 <- combined23[!duplicated(combined23$UniqueID), ]
+
+# 2024
+point_stats_2024 <- Stats_2024[ , c('First.Name', 'Last.Name', 'points', 'scoringPoints', 
+                                   'assists', 'causedTurnovers', 'groundBalls', 'UniqueID', 'Year')]
+
+top_ten_points_2024 <- head(point_stats_2024[order(point_stats_2024$points, decreasing = TRUE), ], 10)
+top_ten_scoringPoints_2024 <- head(point_stats_2024[order(point_stats_2024$scoringPoints, decreasing = TRUE), ], 10)
+top_ten_assists_2024 <- head(point_stats_2024[order(point_stats_2024$assists, decreasing = TRUE), ], 10)
+top_ten_ct_2024 <- head(point_stats_2024[order(point_stats_2024$causedTurnovers, decreasing = TRUE), ], 10)
+top_ten_gb_2024 <- head(point_stats_2024[order(point_stats_2024$groundBalls, decreasing = TRUE), ], 10)
+
+combined24 <- rbind(
+  top_ten_points_2024,
+  top_ten_scoringPoints_2024,
+  top_ten_assists_2024,
+  top_ten_ct_2024,
+  top_ten_gb_2024
+)
+
+top_ten_performers_2024 <- combined24[order(-combined24$points), ]
+top_ten_performers_2024 <- combined24[!duplicated(combined24$UniqueID), ]
+
+# 2025
+point_stats_2025 <- Stats_2025[ , c('First.Name', 'Last.Name', 'points', 'scoringPoints', 
+                                   'assists', 'causedTurnovers', 'groundBalls', 'UniqueID', 'Year')]
+
+top_ten_points_2025 <- head(point_stats_2025[order(point_stats_2025$points, decreasing = TRUE), ], 10)
+top_ten_scoringPoints_2025 <- head(point_stats_2025[order(point_stats_2025$scoringPoints, decreasing = TRUE), ], 10)
+top_ten_assists_2025 <- head(point_stats_2025[order(point_stats_2025$assists, decreasing = TRUE), ], 10)
+top_ten_ct_2025 <- head(point_stats_2025[order(point_stats_2025$causedTurnovers, decreasing = TRUE), ], 10)
+top_ten_gb_2025 <- head(point_stats_2025[order(point_stats_2025$groundBalls, decreasing = TRUE), ], 10)
+
+combined25 <- rbind(
+  top_ten_points_2025,
+  top_ten_scoringPoints_2025,
+  top_ten_assists_2025,
+  top_ten_ct_2025,
+  top_ten_gb_2025
+)
+
+top_ten_performers_2025 <- combined25[order(-combined25$points), ]
+top_ten_performers_2025 <- combined25[!duplicated(combined25$UniqueID), ]
+
+```
+
+# Combine all of the Top 10 dataframes into one 2019-2025 Top 10
+```{r}
+combined19_25 <- rbind(top_ten_performers_2019,
+                       top_ten_performers_2020,
+                       top_ten_performers_2021,
+                       top_ten_performers_2022,
+                       top_ten_performers_2023,
+                       top_ten_performers_2024,
+                       top_ten_performers_2025)
+
+top_ten_assists_19to25 <- head(combined19_25[order(combined19_25$assists, decreasing = TRUE), ], 10)
+top_ten_points_19to25 <- head(combined19_25[order(combined19_25$points, decreasing = TRUE), ], 10)
+top_ten_scoringPoints_19to25 <- head(combined19_25[order(combined19_25$scoringPoints, decreasing = TRUE), ], 10)
+top_ten_ct_19to25 <- head(combined19_25[order(combined19_25$causedTurnovers, decreasing = TRUE), ], 10)
+top_ten_gb_19to25 <- head(combined19_25[order(combined19_25$groundBalls, decreasing = TRUE), ], 10)
+
+# Finding the best of the best
+top_combined19_25 <- rbind(top_ten_assists_19to25,
+                           top_ten_points_19to25,
+                           top_ten_scoringPoints_19to25,
+                           top_ten_gb_19to25,
+                           top_ten_ct_19to25)
+```
+
+# Boxplots for each statistic, see who the outliers are if any
+```{r}
+combined_points19to25 <- rbind(top_ten_points_2019,
+                               top_ten_points_2020,
+                               top_ten_points_2021,
+                               top_ten_points_2022,
+                               top_ten_points_2023,
+                               top_ten_points_2024,
+                               top_ten_points_2025)
+points_boxplot <- boxplot(points ~ Year, data = combined_points19to25, horizontal = TRUE, xlab = "Points", ylab = "Year")
+
+combined_ct19to25 <- rbind(top_ten_ct_2019,
+                           top_ten_ct_2020,
+                           top_ten_ct_2021,
+                           top_ten_ct_2022,
+                           top_ten_ct_2023,
+                           top_ten_ct_2024,
+                           top_ten_ct_2025)
+ct_boxplot <- boxplot(causedTurnovers ~ Year, data = combined_ct19to25, horizontal = TRUE, xlab = "Caused Turnovers", ylab = "Year")
+```
+
+# Next project tbd
+```{r}
+
 ```
 

@@ -228,11 +228,56 @@ combined_ct19to25 <- rbind(top_ten_ct_2019,
                            top_ten_ct_2023,
                            top_ten_ct_2024,
                            top_ten_ct_2025)
-ct_boxplot <- boxplot(causedTurnovers ~ Year, data = combined_ct19to25, horizontal = TRUE, xlab = "Caused Turnovers", ylab = "Year")
+ct_boxplot <- boxplot(causedTurnovers ~ Year,
+                      data = combined_ct19to25,
+                      horizontal = TRUE,
+                      xlab = "Caused Turnovers",
+                      ylab = "Year")
+outlier_rows <- combined_ct19to25$causedTurnovers %in% ct_boxplot$out
+#**Need to figure out how to make labels not overlap**
+text(x = ct_boxplot$out, y = ct_boxplot$group, labels = combined_ct19to25$Last.Name[outlier_rows], pos = 3, cex = 0.7)
 ```
 
-# Next project tbd
+# Next project: Points per touch
 ```{r}
+# I want to figure out the most efficient players by tracking how many points they score per touch
+# I will limit this to only Attack and Midfield
+# Touches weren't tracked until 2022 so that's when I will start
+df_22to25 <- rbind(Stats_2022,
+                   Stats_2023,
+                   Stats_2024,
+                   Stats_2025)
+offensive_players <- df_22to25[df_22to25$Position == c("A", "M"), ]
+offensive_players$PointsPerTouch <- paste(offensive_players$points / offensive_players$touches)
+top_ten_pts_per_touch <- head(offensive_players[order(offensive_players$points, decreasing = TRUE), ], 10)
+top_ten_pts_per_touch_mod <- top_ten_pts_per_touch[ , c('First.Name', 'Last.Name', 'Position', 'Team', 'points', 'touches', 'PointsPerTouch', 'Year')]
 
+pts_per_touch_plot <- plot(x = df_22to25$touches,
+                           y = df_22to25$points,
+                           xlab = "Touches",
+                           ylab = "Points",
+                           main = "Points Per Touch Scatterplot")
 ```
+
+```{r}
+# There is a low outlier, here is how I figured out if the player is extremely good, or if there is a data entry error
+offensive_players <- offensive_players[offensive_players$touches != 0 & offensive_players$points != 0, ]
+offensive_players_mod <- offensive_players[ , c('First.Name', 'Last.Name', 'Position', 'Team', 'points', 'touches', 'PointsPerTouch', 'Year')]
+
+#The player is Jackson Morril, seems like it is a data entry error
+```
+
+# Scatterplot regression
+```{r}
+pts_per_touch_regression <- lm(points ~ touches, data = offensive_players_mod)
+pts_per_touch_regression
+pts_per_touch_plot <- plot(x = df_22to25$touches,
+                           y = df_22to25$points,
+                           xlab = "Touches",
+                           ylab = "Points",
+                           main = "Points Per Touch Scatterplot")
+pts_per_touch_plot
+abline(pts_per_touch_regression, col = "red", lwd = 2)
+```
+
 
